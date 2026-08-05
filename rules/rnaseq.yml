@@ -1,0 +1,15 @@
+version: 1
+# One decision, and it is a real one: both aligners are defensible, the measured read
+# length makes one more appropriate, and Dobin et al. is a citation for that claim.
+#
+# A `param: strandedness` block used to sit here, mapping reverse -> 2. That was
+# featureCounts' encoding of a fact, not a decision — the module already contains the
+# translation, and its "citation" was the tool's own manual. The fact now travels in
+# `meta.strandedness` and the module keeps its encoding. See Plan 1.5.
+decisions:
+  - decides: {producer_of: alignment.bam}
+    because: "read length determines which aligner is appropriate"
+    cite: "Dobin et al. 2013, doi:10.1093/bioinformatics/bts635"
+    rows:
+      - {when: {read_length: ">= 70"}, then: nf-core/star/align@1.11.0}
+      - {when: {read_length: "< 70"},  then: nf-core/hisat2/align@2.2.2}
