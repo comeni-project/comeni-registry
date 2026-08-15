@@ -1,3 +1,4 @@
+declares: contract
 id: nf-core/samtools/index@1.21.0
 roles: [bam_indexing]
 nf_process: SAMTOOLS_INDEX

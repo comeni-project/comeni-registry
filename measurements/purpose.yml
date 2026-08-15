@@ -1,3 +1,5 @@
+declares: measurement
+id: purpose
 kind: enum
 values: [expression, variant_calling, junction_discovery, transcript_assembly]
 extensible: true

@@ -1,3 +1,5 @@
+declares: measurement
+id: organism
 kind: enum
 values: [homo_sapiens, mus_musculus, danio_rerio]
 extensible: true

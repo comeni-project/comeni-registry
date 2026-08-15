@@ -1,3 +1,5 @@
+declares: measurement
+id: strandedness
 kind: enum
 values: [forward, reverse, unstranded]
 description: "Library strandedness determined by the prep protocol"

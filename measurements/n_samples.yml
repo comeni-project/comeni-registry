@@ -1,3 +1,5 @@
+declares: measurement
+id: n_samples
 kind: integer
 minimum: 1
 description: "Number of samples in the study"

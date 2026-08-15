@@ -1,3 +1,5 @@
+declares: measurement
+id: adapter_content
 kind: number
 minimum: 0
 maximum: 100

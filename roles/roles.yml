@@ -1,3 +1,4 @@
+declares: role
 # The jobs a contract can do. Closed, like every other vocabulary: a contract naming a role
 # that is not declared in some layer of the stack fails to load (MD0302).
 #

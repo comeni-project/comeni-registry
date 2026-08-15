@@ -1,3 +1,4 @@
+declares: rule
 version: 1
 # One decision, and it is a real one: both aligners are defensible, the measured read
 # length makes one more appropriate, and Dobin et al. is a citation for that claim.

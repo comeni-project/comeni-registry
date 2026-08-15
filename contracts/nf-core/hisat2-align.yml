@@ -1,3 +1,4 @@
+declares: contract
 id: nf-core/hisat2/align@2.2.2
 roles: [alignment]
 nf_process: HISAT2_ALIGN

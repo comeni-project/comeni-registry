@@ -1,3 +1,5 @@
+declares: measurement
+id: rrna_fraction
 kind: number
 minimum: 0
 maximum: 100

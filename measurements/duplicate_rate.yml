@@ -1,3 +1,5 @@
+declares: measurement
+id: duplicate_rate
 kind: number
 minimum: 0
 maximum: 100

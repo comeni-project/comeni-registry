@@ -1,3 +1,4 @@
+declares: contract
 # The collector: measurements in, one profile file out. `mendel profile` does not
 # route this — it wants the measurements themselves — but the laboratory runs the
 # emitted pipeline and this is where the values are gathered.

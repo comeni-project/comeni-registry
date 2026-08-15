@@ -1,3 +1,4 @@
+declares: contract
 id: nf-core/fastqc@0.12.1
 roles: [qc_per_sample]
 nf_process: FASTQC

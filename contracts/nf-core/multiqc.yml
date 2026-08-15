@@ -1,3 +1,4 @@
+declares: contract
 id: nf-core/multiqc@1.35
 roles: [qc_aggregation]
 nf_process: MULTIQC

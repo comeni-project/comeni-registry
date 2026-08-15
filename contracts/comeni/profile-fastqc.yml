@@ -1,3 +1,4 @@
+declares: contract
 # Profiling contracts produce `measurement.<id>` types, which is what makes
 # `mendel profile` an ordinary build rather than a second subsystem: the router
 # already knows how to reach a type, and a measurement is one.

@@ -1,3 +1,5 @@
+declares: measurement
+id: node_memory_gb
 kind: integer
 minimum: 1
 unit: GB

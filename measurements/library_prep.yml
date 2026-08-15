@@ -1,3 +1,5 @@
+declares: measurement
+id: library_prep
 kind: enum
 values: [poly_a, ribo_depleted, template_switching, amplicon]
 extensible: true

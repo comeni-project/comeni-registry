@@ -1,3 +1,5 @@
+declares: measurement
+id: paired
 kind: boolean
 description: "Whether the library was sequenced paired-end"
 cite: "Conesa et al. 2016, doi:10.1186/s13059-016-0881-8"

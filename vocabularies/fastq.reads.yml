@@ -1,3 +1,5 @@
+declares: vocabulary
+id: fastq.reads
 states: [trimmed, deduplicated, subsampled]
 # Two forms, because a local run globs and a remote one cannot: Nextflow refuses a glob
 # pattern over https, so `fromFilePairs` works for `/data/*_R{1,2}.fastq.gz` and fails

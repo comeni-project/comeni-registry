@@ -1,3 +1,5 @@
+declares: measurement
+id: read_length
 kind: integer
 per_sample: true
 minimum: 1

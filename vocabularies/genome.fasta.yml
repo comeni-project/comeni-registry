@@ -1,3 +1,5 @@
+declares: vocabulary
+id: genome.fasta
 # The reference genome. Both aligner index builders need one, and until 2026-08-04
 # neither could get one: the type did not exist and STAR_GENOMEGENERATE was called
 # with an empty tuple in the slot. See issue #8.
