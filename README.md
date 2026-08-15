@@ -64,3 +64,38 @@ Registry data is [CC-BY-4.0](LICENSE). Contracts cite papers, so attribution mat
 Mendel's source code is Apache-2.0 and lives in
 [Comeni-Labs](https://github.com/comeni-project/Comeni-Labs). The nf-core modules these
 contracts describe keep their own licences and are not redistributed here.
+
+## How this layer is arranged
+
+**Every file says what it is**, in a `declares:` line — `contract`, `rule`, `vocabulary`,
+`measurement` or `role` — and vocabularies and measurements carry an explicit `id:`. Nothing
+reads the directory, so **the layout is free**: Mendel will load this layer however you arrange
+it, including as one flat folder.
+
+What follows is therefore a *convention*, not a rule. Nothing enforces it. It exists because a
+registry with no convention is one where every contributor invents their own.
+
+> **A file lives with the narrowest thing it is about.**
+
+```
+registry.yml                       this layer's account of itself
+roles.yml                          the jobs a contract can do
+measurements/                      facts about data, true regardless of tool
+types/                             types many tools touch — fastq.reads, alignment.bam
+tools/nf-core/star/                everything STAR, in one place
+    align.contract.yml
+    genomegenerate.contract.yml
+    genome.index.star.type.yml     only STAR's own modules use it
+rules/                             decisions *between* tools, belonging to neither
+```
+
+**`tools/`, not `modules/`**, because `genome.index.star` is produced by one STAR module and
+consumed by another — grouping per module would split it again, which is the problem this
+layout was made to fix.
+
+**`rules/` is separate** because a rule choosing STAR over HISAT2 is about neither of them.
+Filing it under `star/` would be a lie about what it decides, and this registry's whole claim is
+that a decision states its own reason.
+
+**The `.contract.yml` / `.type.yml` / `.rule.yml` suffix is for people.** The loader reads
+`declares:` and ignores the filename. Drop the suffix if you dislike it; nothing breaks.
