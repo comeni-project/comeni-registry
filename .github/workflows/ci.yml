@@ -1,0 +1,52 @@
+name: check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Comeni-Labs @ mendel-compiler 0.1.0.
+  #
+  # Pinned by commit SHA with the version in a trailing comment — the convention Comeni-Labs
+  # applies to every Action, adopted here for the same reason: a mutable ref can be repointed
+  # by whoever controls the other end. There are no engine release tags yet; when one is cut
+  # for its own reasons this becomes a tag, which is a one-line change.
+  #
+  # Bumping this is a deliberate commit in *this* repository, and `docs/tools/` regenerates in
+  # the same diff — which is the whole reason those pages are committed rather than published.
+  ENGINE_REF: fa65dc4977c6d12887e6ebb6348e8e0f89a8ec9a
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+
+      - name: Install the engine at the pinned commit
+        run: |
+          uv tool install \
+            "mendel-compiler @ git+https://github.com/comeni-project/Comeni-Labs@${ENGINE_REF}#subdirectory=packages/mendel-compiler"
+
+      # Loading the layer is the real gate. It runs every MD0001-MD0012 refusal, vocabulary
+      # closure (a contract naming an undeclared state fails), rule validation against the
+      # parameters contracts actually declare, and role coverage.
+      #
+      # NOT checked here, and it cannot be: conformance against module source — MD0104,
+      # MD0105 and container drift — compares a contract against a vendored main.nf, and this
+      # repository has no vendor/ and should not. That copy is what Comeni-Labs issue #46
+      # removed. A contract naming a process no module defines will merge here and be caught
+      # in the Comeni-Labs pull request that bumps the submodule pointer.
+      - name: The layer loads
+        run: mendel docs --registry . --out "$(mktemp -d)"
+
+      - name: The committed pages match the data
+        run: mendel docs --registry . --out docs/tools --check

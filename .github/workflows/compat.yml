@@ -1,0 +1,64 @@
+name: compat
+
+# Does the layer still load against the engine's `main`, rather than against the pin?
+#
+# Separate from `check` on purpose: a data contributor fixing a DOI must never be blocked by
+# somebody else's engine commit that morning, and a failure they cannot act on is worse than
+# no signal. So this reports and does not gate.
+#
+# This is NOT the drift subsystem returning. `make drift` compared two *copies* of the same
+# data and was deleted because there is one copy now. Engine/registry *compatibility* is a
+# different question about two independently versioned things, and nothing has ever checked it.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  against-main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+
+      # No `continue-on-error` and no `|| true` anywhere in this job. An optional check that
+      # skips when its input is missing reports success for the wrong reason — `make drift`
+      # printed "skipped" and stayed green over twelve edited contracts. If the install fails,
+      # this job fails, and the issue below says so.
+      - name: Install the engine from main
+        run: |
+          uv tool install \
+            "mendel-compiler @ git+https://github.com/comeni-project/Comeni-Labs@main#subdirectory=packages/mendel-compiler"
+
+      - name: The layer loads against main
+        run: mendel docs --registry . --out "$(mktemp -d)"
+
+      - name: The pages the engine would generate today
+        run: mendel docs --registry . --out docs/tools --check
+
+      - name: Report incompatibility
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="This layer no longer loads against Comeni-Labs main"
+          existing=$(gh issue list --state open --search "$title in:title" --json number \
+            --jq '.[0].number // empty')
+          body="The scheduled compatibility run failed: $RUN
+
+          The pinned engine in .github/workflows/ci.yml still works, so pull requests here are
+          unaffected. What this means is that bumping the pin will need work — either the layer
+          or the engine has to change first.
+
+          This issue is reopened and updated by the workflow rather than duplicated."
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+          else
+            gh issue create --title "$title" --body "$body"
+          fi
